@@ -1,15 +1,18 @@
 import pandas as pd
+import uvicorn
 from fastapi import FastAPI
 import json
-
 import mysql.connector
 from fastapi import Request
 from fastapi.middleware.cors import CORSMiddleware
 import error_library as err_lib
 from test_lib import get_test_lib
-from users_inf_lib import get_user_ranking, try_connection, \
-    get_user_historic, get_total_wins, add_user_db, verify_user
+import users_inf_lib
+import users_inf_lib
 from question_answer_lib import get_question_theme, get_answers
+from a2wsgi import ASGIMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
 
@@ -26,7 +29,7 @@ app.add_middleware(
 response = err_lib.Format_result()
 
 
-@app.get('/get_test_list')
+@app.get('//get_test_list')
 async def get_test_list():
     result = get_test_lib()
     response.error = None
@@ -34,21 +37,21 @@ async def get_test_list():
     return json.dumps(response.__dict__)
 
 
-@app.get("/get_ranking")
+@app.get("//get_ranking")
 async def get_ranking():
-    result = get_user_ranking()
+    result = users_inf_lib.get_user_ranking()
 
     response.error = None
     response.response = result
     return json.dumps(response.__dict__)
 
 
-@app.post("/get_totalWins")
+@app.post("//get_totalWins")
 async def get_totalWins(data: Request):
     request = await data.json()
     user_id = request['id']
     if user_id is not None:
-        result = get_total_wins(user_id)
+        result = users_inf_lib.get_total_wins(user_id)
         response.response = result
         response.error = None
         return json.dumps(response.__dict__)
@@ -59,14 +62,13 @@ async def get_totalWins(data: Request):
         return json.dumps(response.__dict__)
 
 
-@app.post("/try_connect")
+@app.post("//try_connect")
 async def try_connect(data: Request):
     request = await data.json()
     password = request['password']
     username = request['username']
-
     if password and username is not None:
-        can_connect, returned_result, error = try_connection(username, password)
+        can_connect, returned_result, error = users_inf_lib.try_connection(username, password)
         if can_connect:
             if returned_result is None:
                 return json.dumps(err_lib.error502.__dict__)
@@ -76,13 +78,13 @@ async def try_connect(data: Request):
     return json.dumps(err_lib.error501.__dict__)
 
 
-@app.post('/get_user_historic')
+@app.post('//get_user_historic')
 async def user_historic(data: Request):
     request = await data.json()
     user_id = int(request['id'])
 
     if user_id is not None:
-        result = get_user_historic(user_id)
+        result = users_inf_lib.get_user_historic(user_id)
 
         response.error = None
         response.response = pd.DataFrame(result, columns=['userID', 'y', 'x']).drop('userID', axis=1).to_json(
@@ -94,7 +96,7 @@ async def user_historic(data: Request):
         return json.dumps(response.__dict__)
 
 
-@app.post('/get_questions')
+@app.post('//get_questions')
 async def get_questions(data: Request):
     request = await data.json()
     theme = str(request['theme'])
@@ -110,7 +112,7 @@ async def get_questions(data: Request):
         return json.dumps(response.__dict__)
 
 
-@app.post('/verify_answer')
+@app.post('//verify_answer')
 async def verify_ans(data: Request):
     request = await data.json()
     infos = request["answer"]
@@ -126,27 +128,27 @@ async def verify_ans(data: Request):
         return json.dumps(response.__dict__)
 
 
-@app.post('/add_user')
+@app.post('//add_user')
 async def add_user(data: Request):
     request = await data.json()
     if request is not None:
         password = request['password']
         email = request['email']
         pseudo = request['pseudo']
-        add_user_db(password, email, pseudo)
+        users_inf_lib.add_user_db(password, email, pseudo)
         response.error = None
         response.response = ''
         return json.dumps(response.__dict__)
 
 
-@app.post('/verify')
+@app.post('//verify')
 async def verify(data: Request):
     request = await data.json()
     if request is not None:
         password = request['password']
         email = request['email']
         pseudo = request['pseudo']
-        verify_user(password, str(email), pseudo)
+        users_inf_lib.verify_user(password, str(email), pseudo)
         response.error = None
         response.response = ''
         return json.dumps(response.__dict__)
