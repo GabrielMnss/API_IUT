@@ -66,7 +66,7 @@ def user_exist_in_db(email, password):
     try:
         columns = []
         db_result = []
-        cursor.callproc('get_questions_answers', [password, email])
+        cursor.callproc('try_connect', [password, email])
         for r in cursor.stored_results():
             db_result.append(r.fetchall())
         print(db_result)
