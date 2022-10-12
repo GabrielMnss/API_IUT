@@ -65,7 +65,11 @@ def get_user_ranking():
 def user_exist_in_db(email, password):
     try:
         columns = []
-
+        db_result = []
+        cursor.callproc('get_questions_answers', [password, email])
+        for r in cursor.stored_results():
+            db_result.append(r.fetchall())
+        print(db_result)
         cursor.execute("SELECT * FROM user_information")
         for column in cursor.description:
             columns.append(column[0])

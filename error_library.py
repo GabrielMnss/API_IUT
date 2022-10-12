@@ -11,5 +11,5 @@ error501.can_connect = False
 
 error502 = Format_result()
 error502.error = 502
-error502.response = ""
+error502.response = "Connection error"
 error502.can_connect = False

@@ -10,7 +10,6 @@ from test_lib import get_test_lib
 import users_inf_lib
 import users_inf_lib
 from question_answer_lib import get_question_theme, get_answers
-from a2wsgi import ASGIMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
