@@ -8,7 +8,6 @@ from fastapi.middleware.cors import CORSMiddleware
 import error_library as err_lib
 from test_lib import get_test_lib
 import users_inf_lib
-import users_inf_lib
 from question_answer_lib import get_question_theme, get_answers
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -43,22 +42,6 @@ async def get_ranking():
     response.error = None
     response.response = result
     return json.dumps(response.__dict__)
-
-
-@app.post("//get_totalWins")
-async def get_totalWins(data: Request):
-    request = await data.json()
-    user_id = request['id']
-    if user_id is not None:
-        result = users_inf_lib.get_total_wins(user_id)
-        response.response = result
-        response.error = None
-        return json.dumps(response.__dict__)
-
-    else:
-        response.error = err_lib.error501
-        response.response = None
-        return json.dumps(response.__dict__)
 
 
 @app.post("//try_connect")

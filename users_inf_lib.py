@@ -5,17 +5,6 @@ import pandas as pd
 import main as main
 from SQL_connect import connection, cursor, engine
 
-
-def get_total_wins(user_id):
-    try:
-        sql_query = "select totalWins from user_information where userID = " + str(user_id)
-        cursor.execute(sql_query)
-        result = cursor.fetchall()[0]
-        return result
-    except ValueError:
-        return None
-
-
 # def get historic
 def get_user_historic(user_id):
     try:
@@ -65,11 +54,6 @@ def get_user_ranking():
 def user_exist_in_db(email, password):
     try:
         columns = []
-        db_result = []
-        cursor.callproc('try_connect', [password, email])
-        for r in cursor.stored_results():
-            db_result.append(r.fetchall())
-        print(db_result)
         cursor.execute("SELECT * FROM user_information")
         for column in cursor.description:
             columns.append(column[0])

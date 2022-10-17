@@ -30,7 +30,6 @@ def get_answers(user_answers):
     user_ans = user_ans[user_ans.columns[::-1]]
 
     user_id = user_answers['userID']
-
     if connection.is_connected():
         db_result = []
         cursor.callproc('get_questions_answers', [user_answers['theme']])
@@ -42,7 +41,6 @@ def get_answers(user_answers):
             ['real_response', 'id', 'reward']]
 
         db_result = db_result.loc[(db_result['id'].isin(user_ans['id']))]
-
         infos = check_responses(user_ans, db_result)
 
         actualise_new_wins(infos, user_id)
@@ -55,9 +53,6 @@ def check_responses(user_rep, db_rep):
     user_rep = user_rep.sort_values('id')
     db_rep = db_rep.sort_values('id')
     user_rep = user_rep.drop_duplicates(subset=['id'], keep=False)
-
-    print(user_rep)
-    print(db_rep)
 
     try:
         for i in range(len(user_rep)):
