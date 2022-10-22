@@ -5,6 +5,7 @@ import pandas as pd
 import main as main
 from SQL_connect import connection, cursor, engine
 
+
 # def get historic
 def get_user_historic(user_id):
     try:
@@ -85,7 +86,6 @@ def try_connection(email, password):
 
 def add_user_db(password, email, pseudo):
     exist, infos = user_exist_in_db(email, password)
-    print(exist)
     if exist == 0:
         user = {"pseudo": pseudo, "email": email, "password": password}
         new_user = pd.DataFrame(user, index=[0])

@@ -98,7 +98,6 @@ async def get_questions(data: Request):
 async def verify_ans(data: Request):
     request = await data.json()
     infos = request["answer"]
-
     if infos is not None:
         result = get_answers(infos)
         response.error = None
