@@ -25,8 +25,7 @@ def get_user_historic(user_id):
                 for i in range(len(datas) - 1):
                     if not (datas[i][2] <= datas[i + 1][2] - datetime.timedelta(hours=24)):
                         let = True
-                        datas[i][1] += datas[i + 1][1]
-                        datas.pop(i + 1)
+                        datas.insert(i, [[datas[i][1]][datas[i][2] + datetime.timedelta(hours=24)]])
                         break
             return datas[0:10]
     except ValueError:
