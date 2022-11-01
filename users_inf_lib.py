@@ -27,8 +27,7 @@ def get_user_historic(user_id):
                         let = True
                         datas.insert(i+1, [datas[i][0], 0, datas[i][2] + datetime.timedelta(hours=20)])
                         break
-            print(datas)
-            return datas[0:10]
+            return datas[-10:]
     except ValueError:
         return None
 

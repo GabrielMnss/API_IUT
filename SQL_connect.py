@@ -8,4 +8,4 @@ connection = mysql.connector.connect(host='192.168.0.29',
 connection.autocommit = True
 engine = create_engine("mysql+mysqldb://root:gabrielmassoN01612!@192.168.0.29/IUT_DB")
 
-cursor = connection.cursor()
+cursor = connection.cursor(buffered=True)

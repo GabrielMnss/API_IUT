@@ -1,16 +1,12 @@
 import pandas as pd
-import uvicorn
 from fastapi import FastAPI
 import json
-import mysql.connector
 from fastapi import Request
 from fastapi.middleware.cors import CORSMiddleware
 import error_library as err_lib
 from test_lib import get_test_lib
 import users_inf_lib
 from question_answer_lib import get_question_theme, get_answers
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
 

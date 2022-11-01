@@ -1,8 +1,7 @@
 from datetime import datetime
 import random
-
+from API.AIverify import verifyForOpenQuestions
 import pandas as pd
-import main as main
 from SQL_connect import connection, cursor, engine
 
 
@@ -25,8 +24,21 @@ def get_question_theme(theme):
 
 def get_answers(user_answers):
     user_id = user_answers['userID']
+
     for ans in user_answers['user_ans']:
-        cursor.callproc('qcm_verify', (ans['id'], ans['user_response'], user_id))
+        if ans['type'] == 'qcm':
+            cursor.callproc('qcm_verify', (ans['id'], ans['user_response'], user_id))
+
+        if ans['type'] == 'ope':
+            user_answer = ans['user_response']
+            sql_query = f"Select answer, reward from question_answer where questionID = {ans['id']}"
+            cursor.execute(sql_query)
+            connection.commit()
+            resp = cursor.fetchall()[0]
+            real_answer = resp[0]
+            reward = resp[1]
+            if verifyForOpenQuestions(real_answer, user_answer):
+                cursor.callproc('Add_reward', (user_id, reward))
 
 
 def actualise_new_wins(infos, user_id):
