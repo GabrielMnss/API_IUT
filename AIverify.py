@@ -15,5 +15,6 @@ def embed(input):
 
 def verifyForOpenQuestions(str1, str2):
     message_embeddings_ = embed([str1, str2])
-    print("ia response coeff", np.inner(message_embeddings_, message_embeddings_)[0][1])
-    return np.inner(message_embeddings_, message_embeddings_)[0][1] > 0.75
+    result = np.inner(message_embeddings_, message_embeddings_)[0][1]
+    print("ia response coeff", result)
+    return result
